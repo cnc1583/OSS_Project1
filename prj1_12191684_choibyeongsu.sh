@@ -8,7 +8,7 @@ Student Number: 12191684
 3. Get the average 'rating' of the movie identified by specific 'movie id' from 'u.data'
 4. Delete the 'IMDb URL' from 'u.item'
 5. Get the data about users from 'u.user'
-6. Modify the format of 'release data' in 'u.item'
+6. Modify the format of 'release date' in 'u.item'
 7. Get the data of movies rated by a specific 'user id' from 'u.data'
 8. Get the average 'rating' of movies rated by users with 'age' between 20 and 29 and 'occupation' as 'programmer'
 9. Exit
@@ -22,7 +22,7 @@ do
 	case $user_choice in
 		1)
 			echo''
-			read -p "Please enter 'movie id' (1~1682):" movie_id
+			read -p "Please enter 'movie id' (1~1682): " movie_id
 			echo ''
 			
 			cat $1 | awk -F \| -v movie_num=$movie_id 'movie_num==$1{print $0}'
@@ -41,10 +41,10 @@ do
 			;;
 		3)
 			echo ''
-			read -p "Please enter the 'movie id' (1~1682):" movie_id
+			read -p "Please enter the 'movie id' (1~1682): " movie_id
 			echo ''
 			
-			cat $2 | awk -v movie_id=$movie_id 'BEGIN {sum = 0; cnt = 0; average = 0} movie_id==$2 {cnt += 1; sum += $3} END {average = sum / cnt; printf "average rating of %s: %.5f", movie_id, average}'
+			cat $2 | awk -v movie_id=$movie_id 'BEGIN {sum = 0; cnt = 0; average = 0} movie_id==$2 {cnt += 1; sum += $3} END {average = sum / cnt; printf "average rating of %s: %.6g", movie_id, average}'
 			echo -e '\n'
 			;;
 		4)
@@ -71,7 +71,7 @@ do
 			;;
 		6)
 			echo ''
-			read -p "Do you want to Modify the format of 'release data' in 'u.item'?(y/n): " y_or_n
+			read -p "Do you want to Modify the format of 'release date' in 'u.item'?(y/n): " y_or_n
 			echo ''
 			
 			if [ $y_or_n == 'y' ]
@@ -113,7 +113,7 @@ do
 
 				for var in $(seq 1 1682)
 				do
-					cat temp.txt | awk -F ' ' -v movie_id=$var 'BEGIN{sum=0; cnt=0; avg=0} $1==movie_id{cnt+=1; sum+=$2} END{if (cnt != 0) {avg=sum/cnt; print movie_id, avg}}'
+					cat temp.txt | awk -F ' ' -v movie_id=$var 'BEGIN{sum=0; cnt=0; avg=0} $1==movie_id{cnt+=1; sum+=$2} END{if (cnt != 0) {avg=sum/cnt; printf "%d %0.6g\n", movie_id, avg}}'
 					
 				done
 				
@@ -126,6 +126,9 @@ do
 		9)
 			echo "Bye!"
 			break
+			;;
+		*)
+			echo "Invalid Choice"
 			;;
 	esac
 done
